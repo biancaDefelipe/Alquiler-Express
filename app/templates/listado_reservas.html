@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Reservas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+
+  <style>
+        .estado-cancelada { color: red !important; font-weight: bold; }
+        .estado-finalizada { color: gray !important; font-weight: bold; }
+        .estado-abonada { color: blue !important; font-weight: bold; }
+        .estado-en-curso { color: green !important; font-weight: bold; }
+        .btn-sm{background-color: #468423; border: none;}
+        .btn-sm:hover {background-color: #EDDA6F; border: none; color: black;}
+        #confirmarBtn {background-color: #468423; border: none;}
+
+        #btnPorIniciar {background-color: #468423; border: none;}
+        #btnPorIniciar:hover {background-color: #EDDA6F; border: none;color: black;}
+        #btnPorFinalizar  {background-color:#468423; border: none;}
+        #btnPorFinalizar:hover {background-color: #EDDA6F; border: none;color: black;}
+
+
+
+
+  </style>
+
+
+  <script>
+    document.querySelectorAll(".fecha-con-hora").forEach(el => {
+      el.textContent = formatearFechaConHora(el.textContent);
+    });
+  </script>
+
+
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="titulo-principal">Gestión de Reservas</h1>
+      <a href="{{ url_for('inicio') }}">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="height: 100px;" />
+      </a>
+    </div>
+    
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-8">
+        <form id="searchForm" class="d-flex">
+          <input type="text" class="form-control me-2" id="codigoReserva" placeholder="Ingrese código de reserva" required />
+          <button type="submit" class="btn btn-warning" id="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
+        </form>
+      </div>
+    </div>
+    <div class="filter-bar">
+  <label for="filterEstado">Filtrar reservas por estado: </label>
+  <select id="filterEstado">
+    <option value="todas">Todos los estados</option>
+    <option value="abonada">Abonada</option>
+    <option value="en curso">En curso</option>
+    <option value="finalizada">Finalizada</option>
+    <option value="cancelada">Cancelada</option>
+    
+  </select>
+<button id="btnPorIniciar" class="btn btn-success" style= "display: None; ">Reservas por Iniciar</button>
+<button id="btnPorFinalizar" class="btn btn-success" style= "display: None; ">Reservas por Finalizar</button>
+<button id="btnTodas" class="btn btn-success">Limpiar Filtro
+  
+</button>
+
+</div>
+
+
+
+
+
+    {% if reservas %}
+        <script>
+                window.reservas = JSON.parse('{{ reservas | tojson | safe }}');
+                console.log("Reservas disponibles:", reservas);
+
+                document.addEventListener('DOMContentLoaded', () => {
+                  const input = document.getElementById("codigoReserva");
+                  const btnBuscar = document.getElementById("btn-buscar");
+                  const tbody    = document.querySelector("#tabla tbody");
+
+                  btnBuscar.addEventListener("click", function(e) {
+                    e.preventDefault();
+
+                    const inputValue = input.value.trim();
+                    if (!inputValue) {
+                      Array.from(tbody.rows).forEach(row => row.style.display = "");
+                      return;
+                    }
+
+                    // filtrar reservas
+                    const filtradas = window.reservas.filter(r => String(r.id_reserva) === inputValue);
+
+                    // ocultar/mostrar filas
+                    Array.from(tbody.rows).forEach(row => {
+                      const celdaCodigo = row.cells[0].textContent.trim();
+                      row.style.display = (celdaCodigo === inputValue) ? "" : "none";
+                    });
+
+                    if (filtradas.length === 0) {
+                      alert(`No se encontró la reserva con el código "${inputValue}"`);
+                    }
+                  });
+                });
+                
+        </script>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle" id="tabla">
+        <thead class="table">
+          <tr>
+            <th>Código</th>
+            <th>DNI Inquilino</th>
+            <th>ID Propiedad</th>
+            <th>Precio Total</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Estado</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Cancelar</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reserva in reservas %}
+          <tr data-id-reserva="{{reserva.id_reserva}}">
+            <td>{{ reserva.id_reserva }}</td>
+            <td>{{ reserva.dni_inquilino }}</td>
+            <td>{{ reserva.id_propiedad }}</td>
+            <td>${{ reserva.precio_total }}</td>
+            <td>{{ reserva.fecha_inicio }}</td>
+            <td>{{ reserva.fecha_fin }}</td>
+            <td class="estado-{{ reserva.estado|lower|replace(' ', '-') }}">
+                {{ reserva.estado }}
+            </td>
+            <td>
+            <button class="btn btn-sm text-white btn-checkin"
+                    data-id="{{ reserva.id_reserva }}"
+                    data-checkin="{{ reserva.fecha_check_in }}"
+                    onclick="confirmarCheck('{{ reserva.id_reserva }}', 'in')">
+                Check-In
+            </button>
+            </td>
+            <td>
+            <button class="btn btn-sm text-white btn-checkout"
+                    data-id="{{ reserva.id_reserva }}"
+                    data-checkout="{{ reserva.fecha_check_out }}"
+                    onclick="confirmarCheck('{{ reserva.id_reserva }}', 'out')">
+                Check-Out
+            </button>
+            </td>
+            <td>
+            <button class="btn btn-sm text-white btn-cancelar"
+                    onclick="cancelarReserva('{{ reserva.id_reserva }}')">
+                Cancelar
+            </button>
+            </td>
+
+        </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">No hay reservas para mostrar.</div>
+    {% endif %}
+  </div>
+
+  <!-- Modal Confirmación -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Confirmar acción</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="modalMensaje">
+          ¿Estás seguro que querés realizar esta acción?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="confirmarBtn">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='js/ver_reservas.js') }}"></script>
+</body>
+</html>

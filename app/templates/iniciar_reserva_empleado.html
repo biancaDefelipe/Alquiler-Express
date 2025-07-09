@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirmación de Reserva - Alquiler Express</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #d4e3cd;
+      padding: 20px 30px;
+    }
+    header .navbar-brand img {
+      height: 70px;
+    }
+    .reserva-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+    .resumen-titulo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .total {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #000;
+    }
+    .btn-confirmar {
+      background-color: #058b7f;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-confirmar:hover {
+      background-color: #036b61;
+    }
+
+    .contentIframe {
+      width: 1200px;
+      height: 1000px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .contentIframe iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: inherit;
+    }
+
+    .contentIframeAll {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center; 
+      z-index: 9999;
+      backdrop-filter: blur(6px);
+      flex-direction: column;
+    }
+
+    .btn-danger {
+      font-size: 1.8rem;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 1200px;
+    }
+
+  </style>
+</head>
+<body>
+
+<header class="d-flex align-items-center justify-content-between">
+  <div class="d-flex align-items-center gap-4">
+    <a href="{{ url_for('inicio') }}">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="100" height="100" class="img-fluid">
+    </a>
+  </div>
+  <!-- <div class="d-flex align-items-center gap-3">
+    <button class="btn btn-success" id="cerrar-sesion">Cerrar Sesión</button>
+    <img src="https://img.icons8.com/ios-glyphs/30/user--v1.png"/>
+  </div> -->
+</header>
+  <div class="container">
+    <div class="reserva-box">
+      <div class="resumen-titulo">Confirmación de la reserva</div>
+
+      <div class="row mb-3">
+
+        <div class="col-md-6">
+          <label class="form-label"><strong>Email del inquilino</strong></label>
+          <input class="form-control" id="email" disabled><br>
+
+          <label class="form-label"><strong>Nombre y apellido del inquilino</strong></label><br>
+          <span id="nombre"></span><span id="apellido"></span><br><br>
+
+          <label class="form-label"><strong>DNI del inquilino</strong></label><br>
+          <span id="dni"></span><br><br>
+
+          <label class="form-label"><strong>Propiedad a reservar</strong></label><br>
+          <span id="propiedad"></span>
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label"><strong>Fecha de inicio de reserva</strong></label><br>
+          <span id="fecha_inicio"></span><br><br>
+
+          <label class="form-label"><strong>Fecha de fin de reserva</strong></label><br>
+          <span id="fecha_fin"></span><br><br>
+
+          <label class="form-label"><strong>Total de días seleccionados</strong></label><br>
+          <span id="dias_seleccionados"></span><br><br>
+
+          <label class="form-label"><strong>Cantidad de huéspedes</strong></label><br>
+          <span id="huespedes"></span>
+        </div>
+      </div>
+
+      <hr>
+
+    <div class="mb-3" id="medios_de_pago">
+    </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+          <div class="total">Total a pagar: AR$ <span id="total"></span></div>
+          <small>Precio por día: AR$ <span id="precio_dia"></span></small>
+        </div>
+        <button class="btn btn-confirmar btn-lg" id="btn-confirmar">Confirmar Reserva</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="contentWallet">
+    <div id="wallet_container"></div>
+  </div>
+
+  <div class="contentIframeAll">
+    <div class="contentIframe">
+      <iframe
+        id="iframePago"
+        frameborder="0"
+      ></iframe>
+    </div>
+    <button class="btn btn-danger" id="btn-close-mp">Cancelar</button>
+  </div>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script src="{{ url_for('static', filename='js/iniciar_reserva_empleado.js') }}"></script>
+
+</body>
+</html>

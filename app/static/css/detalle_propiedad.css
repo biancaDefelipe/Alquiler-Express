@@ -1,0 +1,488 @@
+body {
+  background-color: #f4f8f3;
+}
+
+.navbar-custom {
+  background-color: #BACCA4;
+}
+
+div.logo-custom {
+  background-color: #BACCA4 !important;
+  margin-right: 1rem;
+}
+
+.logo-custom {
+  width: 100vw;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 4rem;
+}
+
+.card-property {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ESTILOS PARA BOTONES SUPERIORES */
+.py-4{
+  margin-left: 1rem;
+}
+.btn-ingresar {
+  background-color: #7DAD93;  
+  color: white;
+  border: none;
+}
+
+.btn-ingresar:hover {
+  background-color: #EDDA6F; 
+}
+
+.btn-registrarse {
+  background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-ver-perfil{
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+.btn-cerrar-sesion{
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-cerrar-sesion:hover{
+    background-color: #EDDA6F; 
+  color: black;
+  border: none;
+}
+
+.btn-mis-alquileres {
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-mis-alquileres:hover{
+    background-color: #EDDA6F; 
+  color: black;
+  border: none;
+}
+
+.btn-registrarse:hover {
+  background-color: #EDDA6F; 
+}
+
+#reg_inq {
+  background-color: #7DAD93;  
+  color: white;
+}
+
+#buscar {
+  background-color: #EDDA6F; 
+  color:black;
+}
+
+#reg_inq:hover {
+  background-color: #EDDA6F; 
+  color:black;
+}
+
+#buscar:hover {
+  color:white;
+}
+
+.navbar-custom .link-group {
+  margin-left: 0 !important;
+}
+
+.nav-link-hover:hover {
+/*color: #EDDA6F !important;*/
+ color: #2956996b !important; 
+ text-shadow: #018790 ;
+}
+.me-auto{
+    margin-left: 2rem;
+}
+
+/* FORMULARIO DE BÚSQUEDA */
+
+.form {
+margin-top: 10px;
+}
+
+.input-custom {
+border-radius: 12px;
+font-weight: 400;
+padding: 10px;
+border: 1px solid #ccc;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.input-custom:focus {
+outline: none;
+border-color: #EDDA6F;
+box-shadow: 0 0 5px #EDDA6F;
+}
+
+.btn-buscar {
+border-radius: 12px;
+border: none;
+font-weight: 900;
+font-size: 1.1rem;
+background-color: #EDDA6F; ;
+color: black;
+
+}
+
+.btn-buscar:hover {
+  background-color: #f5e9a5; 
+  border: none; 
+  color: black; 
+  
+}
+
+.btn-container {
+display: flex;
+align-items: center;
+width: 4rem;
+}
+
+.input-error {
+  border: 2px solid red !important;
+}
+
+.error-msg {
+  color: red;
+  font-size: 0.9em;
+}
+
+/*------VER DETALLE------*/
+
+.contenido {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.izquierda, .derecha {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.id-text {
+  color: #888;
+  font-size: 14px;
+}
+
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.info-line span {
+  display: inline-block;
+}
+
+.info-line span b {
+  margin-left: 4px;
+}
+
+ul.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+
+.flecha {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.info {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.info li {
+  margin: 5px 0;
+}
+
+.acciones-secundarias {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-reservar {
+  width: 150px;
+  height: auto;
+  background-color: #2c9984;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-reservar:hover {
+  background-color: #EDDA6F; 
+  border: none; 
+  color: #000000
+}
+
+.descripcion h3 {
+  margin-top: 0;
+}
+
+#titulo-propiedad {
+  word-break: break-word;      /* Permite que palabras largas se corten si es necesario */
+  max-width: 100%;             /* Que no exceda el ancho del contenedor */
+  overflow-wrap: break-word;   /* Apoyo para navegadores más viejos */
+}
+
+.imagen-propiedad {
+  width: 75%;            /* Que ocupe todo el ancho disponible del contenedor */
+  max-width: 500px;       /* Tamaño máximo estándar */
+  height: 300px;          /* Alto fijo */
+  object-fit: cover;      /* Recorta la imagen si es más grande, pero mantiene proporción */
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;    /* Opcional: bordes redondeados */
+}
+
+.imagen-propiedad img {
+  max-width: 87.5%;
+  border-radius: 10px;
+}
+
+.precio-titulo {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.precio-valor {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+main.contenido {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* opcional, espacio entre secciones */
+}
+
+
+
+
+
+#descripcion-propiedad {
+  white-space: pre-wrap;        /* Preserva saltos de línea y ajusta el texto */
+  word-break: break-word;       /* Rompe palabras largas si es necesario */
+  overflow-wrap: break-word;    /* Soporte adicional para navegadores antiguos */
+}
+
+.calificacion, .texto-calificacion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.puntuacion {
+  background-color: #f5d97d;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.estrellas {
+  color: #ccc;
+}
+
+.comentarios-vacio{
+  display: flex;
+  padding: 20px;
+  gap: 40px;
+}
+
+.btn-comentario {
+  background-color: #008b8b;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-comentario:hover {
+  background-color: #EDDA6F; 
+  border: none; 
+  color: #000000
+}
+
+
+
+
+/* |||||||||||||||||||EDITADO POR BIAN ||||||||||||||||                       */
+/* COMENTARIOS */
+.comentarios {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+.comentarios h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.comentarios-vacio {
+  font-style: italic;
+  color: #777;
+}
+
+/* Estilo para cada comentario */
+.comentario {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.comentario p {
+  margin: 0;
+}
+
+.comentario strong {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.comentario span {
+  font-size: 0.9em;
+  color: #999;
+  margin-left: 5px;
+}
+
+.comentario:last-child {
+  border-bottom: none;
+}
+
+/* PREGUNTAS Y RESPUESTAS*/
+.preguntas-respuestas {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+.pregunta-item {
+  margin-bottom: 15px;
+}
+
+.pregunta-texto {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.respuesta-texto {
+  margin-left: 20px;
+  color: #555;
+}
+
+#btn-preguntar{
+  background-color: #008b8b;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#btn-preguntar:hover{
+  background-color: #EDDA6F; 
+  border: none; 
+  color: #000000
+}
+
+.btn-borrar {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 5px;
+  margin-left: 8px;
+  vertical-align: middle;
+  transition: color 0.2s ease;
+}
+
+.mensaje-error {
+  display: none;
+  background-color: rgba(255, 0, 0, 0.85);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  position: relative;
+  margin-bottom: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Cuando se muestre */
+.mensaje-error.show {
+  display: block;
+  opacity: 0.55;
+}
+
+.btn-responder{
+  background-color: #008b8b;
+  color: white;
+  padding: 1%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#btn-responder:hover{
+  background-color: #EDDA6F; 
+  border: none; 
+  color: #000000
+}
+#comentarios-preguntas{
+  display: flex;
+  flex-direction: row; 
+  justify-content:flex-start; 
+
+  
+}
+
+.hijo{
+  display:flex; 
+}
+#texto-preguntar{
+  font-size: 1.15rem; 
+  font-weight: bold;
+}

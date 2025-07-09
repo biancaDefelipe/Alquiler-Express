@@ -1,0 +1,85 @@
+<table class="table table-striped table-hover">
+    <thead class="table-custom-header">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Fecha Nacimiento</th>
+            <th>Teléfono</th>
+            <th>Mail</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for empleado in empleados %}
+        <tr>
+            <td>{{ empleado.nombre }}</td>
+            <td>{{ empleado.apellido }}</td>
+            <td>{{ empleado.dni }}</td>
+            <td>{{ empleado.fecha_nacimiento }}</td>
+            <td>{{ empleado.telefono }}</td>
+            <td>{{ empleado.mail }}</td>
+            <td>{{ empleado.rol }}</td>
+            <td>
+                <div class="dropdown" data-bs-boundary="viewport" data-bs-display="static" style="position: static;">
+                    <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu" class="dropdown-menu" data-bs-boundary="viewport" data-bs-display="static">
+                        <!--li><a class="dropdown-item" href="#">Cambiar Rol</a></li-->
+                        <li>
+                            <button 
+                                class="dropdown-item cambiar-rol-btn"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmarCambioRolModal"
+                                data-nombre="{{ empleado.nombre }} {{ empleado.apellido }}"
+                                data-rol="{{ empleado.rol }}"
+                                data-mail="{{ empleado.mail }}"
+                                {% if empleado.mail == mail_usuario_actual %}
+                                    disabled style="opacity: 0.6; cursor: not-allowed;"
+                                {% endif %}>
+                                <i class="fa-solid fa-arrows-rotate"></i> Cambiar Rol
+                            </button>
+                        </li>
+                        <li>
+                            <button 
+                                class="dropdown-item modificar-email-btn"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#cambiarEmailEmpleadoModal"
+                                data-nombre="{{ empleado.nombre }} {{ empleado.apellido }}"
+                                data-rol="{{ empleado.rol }}"
+                                data-mail="{{ empleado.mail }}"
+                                {% if empleado.mail == mail_usuario_actual %}
+                                    disabled style="opacity: 0.6; cursor: not-allowed;"
+                                {% endif %}
+                                {% if empleado.rol == "GERENTE" %}
+                                    disabled style="opacity: 0.6; cursor: not-allowed;"
+                                {% endif %}>
+                                <i class="fa-solid fa-envelope"></i> Modificar Email
+                            </button>
+                        </li>
+                        <li>
+                            <button 
+                                class="dropdown-item text-danger eliminar-empleado-btn"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmarEliminarEmpleadoModal"
+                                data-nombre="{{ empleado.nombre }} {{ empleado.apellido }}"
+                                data-rol="{{ empleado.rol }}"
+                                data-mail="{{ empleado.mail }}"
+                                {% if empleado.mail == mail_usuario_actual %}
+                                    disabled style="opacity: 0.6; cursor: not-allowed;"
+                                {% endif %}
+                                {% if empleado.rol == "GERENTE" %}
+                                    disabled style="opacity: 0.6; cursor: not-allowed;"
+                                {% endif %}>
+                                <i class="fa-solid fa-trash"></i> Eliminar
+                            </button>
+                        </li>
+                    </ul>
+                </div>  
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

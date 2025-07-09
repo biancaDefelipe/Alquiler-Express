@@ -1,0 +1,98 @@
+body {
+  background-color: #f4f8f3;
+}
+
+h2 {
+  color: #018790;
+}
+
+button.btn-primary , a.btn-primary {
+  background-color: #018790;  
+  color: white;
+  border: none;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 15px;
+}
+
+button.btn-primary:hover {
+  background-color: #EDDA6F; 
+  border: none; 
+  color: black; 
+}
+a.btn-primary:hover {
+  background-color: #EDDA6F; 
+  border: none; 
+  color: black; 
+}
+.buttons{
+  display: grid;
+  grid-template-columns: 40% 40% ;
+  padding: 0.5rem;
+}
+.buttons > .btn{
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+form {
+  display:grid; 
+  grid-template-columns: auto auto ;
+}
+
+.mb-3{
+  padding: 1rem;
+}
+.mb-3 .form-label{
+   /*background-color:#c5cbc36b; */
+   font-weight: bold;
+   border-radius: 3rem;
+   
+}
+.mb-3 .form-control{
+  background-color:#c5cbc36b; 
+  border-radius: 3rem;
+}
+
+.input-error {
+  border: 2px solid red !important;
+}
+
+.error-msg {
+  color: red;
+  font-size: 0.9em;
+}
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.asterisco-obligatorio {
+  color: red;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+.aclaracion-campos{
+  margin-top: -0.005rem;
+}
+/* copiado de nabi */
+
+.navbar-custom {
+  background-color: #BACCA4;
+}
+
+div.logo-custom {
+  background-color: #BACCA4 !important;
+}
+
+.logo-custom {
+  width: 100vw;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.navbar-custom .link-group {
+    margin-left: 0 !important;
+  }
+  

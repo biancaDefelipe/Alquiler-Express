@@ -1,0 +1,328 @@
+body {
+  background-color: #f4f8f3;
+}
+
+.navbar-custom {
+  background-color: #BACCA4;
+}
+
+div.logo-custom {
+  background-color: #BACCA4 !important;
+  margin-right: 1rem;
+}
+
+.logo-custom {
+  width: 100vw;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 4rem;
+}
+
+.card-property {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ESTILOS PARA BOTONES SUPERIORES */
+.py-4{
+  margin-left: 1rem;
+}
+.btn-ingresar {
+  background-color: #7DAD93;  
+  color: white;
+  border: none;
+}
+
+.btn-ingresar:hover {
+  background-color: #EDDA6F; 
+}
+
+.btn-registrarse {
+  background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-ver-perfil{
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+.btn-cerrar-sesion{
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-cerrar-sesion:hover{
+    background-color: #EDDA6F; 
+  color: black;
+  border: none;
+}
+
+.btn-registrarse:hover {
+  background-color: #EDDA6F; 
+}
+
+#reg_inq {
+  background-color: #7DAD93;  
+  color: white;
+}
+
+#buscar {
+  background-color: #EDDA6F; 
+  color:black;
+}
+
+#reg_inq:hover {
+  background-color: #EDDA6F; 
+  color:black;
+}
+
+#buscar:hover {
+  color:white;
+}
+
+.navbar-custom .link-group {
+  margin-left: 0 !important;
+}
+
+.nav-link-hover:hover {
+/*color: #EDDA6F !important;*/
+ color: #2956996b !important; 
+ text-shadow: #018790 ;
+}
+.me-auto{
+    margin-left: 2rem;
+}
+/* FORMULARIO DE FILTROS */
+.sidebar-estilo-verde .sidebar div button h5 label input select option {
+  color: #468423 !important; 
+}
+.sidebar.collapsed .sidebar-content {
+  display: none;
+}
+
+.sidebar {
+background-color: #E3F3D3;
+padding: 15px 15px 15px 25px;
+width: 230px;
+position: fixed;
+top: 0;
+left: 0;
+height: 100vh;
+overflow-y: auto;
+border-radius: 0 0 10px 0;
+transition: all 0.3s ease;
+z-index: 1100;
+font-family: Arial, Helvetica, sans-serif;
+font-weight: 600;
+color: #468423;
+box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar.collapsed {
+width: 60px;
+padding: 15px 5px 15px 10px;
+border-radius: 0 10px 10px 0;
+}
+
+.sidebar .sidebar-toggle {
+display: flex;
+justify-content: center;
+align-items: center;
+background: none;
+border: none;
+cursor: pointer;
+color: #468423;
+font-weight: bold;
+font-size: 18px;
+margin-bottom: 20px;
+transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle .label {
+display: none;
+}
+
+.sidebar .filter-title {
+font-size: 14px;
+margin-bottom: 6px;
+}
+
+.btn-filtros {
+width: 100%;
+font-weight: 700;
+}
+
+#precioLabel {
+font-weight: 700;
+color: #468423;
+margin-top: 6px;
+}
+
+/* FORMULARIO DE BÚSQUEDA */
+
+.form {
+margin-top: 10px;
+}
+
+.input-custom {
+border-radius: 12px;
+font-weight: 400;
+padding: 10px;
+border: 1px solid #ccc;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.input-custom:focus {
+outline: none;
+border-color: #EDDA6F;
+box-shadow: 0 0 5px #EDDA6F;
+}
+
+.btn-buscar {
+border-radius: 12px;
+border: none;
+font-weight: 900;
+font-size: 1.1rem;
+background-color: #EDDA6F; ;
+color: black;
+
+}
+
+.btn-buscar:hover {
+    background-color: #f5e9a5; 
+    border: none; 
+    color: black; 
+  
+}
+
+.btn-container {
+display: flex;
+align-items: center;
+width: 4rem;
+}
+
+.input-error {
+  border: 2px solid red !important;
+}
+
+.error-msg {
+  color: red;
+  font-size: 0.9em;
+}
+/* Contenedor propiedades */
+#propiedades .card {
+border-radius: 12px;
+box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+transition: transform 0.3s ease;
+}
+
+#propiedades .card:hover {
+transform: translateY(-6px);
+box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+cursor: pointer;
+}
+  /* Contenedor de las tarjetas para el evento click */
+  .card-container {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .card-container:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Estilos de las tarjetas */
+  #propiedades .card {
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+  }
+
+  #propiedades .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-lg {
+    max-width: 80%;
+  }
+/* Scrollbar para sidebar si es necesario */
+.sidebar {
+scrollbar-width: thin;
+scrollbar-color: #a3c99b #e3f3d3;
+}
+
+.sidebar::-webkit-scrollbar {
+width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+background: #e3f3d3;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+background-color: #a3c99b;
+border-radius: 10px;
+border: 2px solid #e3f3d3;
+}
+
+.sidebar {
+  display: none; /* Oculta el sidebar inicialmente */
+  /* el resto de tus estilos... */
+}
+
+.sidebar.visible {
+  display: block; /* Muestra el sidebar cuando tiene la clase visible */
+}
+
+.card-container {
+  display: block; /* Mostrar por defecto */
+}
+
+#cerrarSesionModalContenedor{
+  display: none;
+}
+
+.btn-mis-alquileres {
+    background-color: #018790;  
+  color: white;
+  border: none;
+}
+
+.btn-mis-alquileres:hover{
+  background-color: #EDDA6F; 
+  color: black;
+  border: none;
+}
+
+a {
+  text-decoration: none;       /* Saca el subrayado */
+  color: inherit;              /* Hereda el color del texto del contenedor */
+}
+
+a:hover {
+  color: white;              /* Aclara el bloque ligeramente al pasar el mouse */
+}
+
+.ver-perfil-container {
+  text-align: right;
+}
+
+button.btn-primary {
+  background-color: #018790;  
+  color: white;
+  border: none;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 15px;
+}
+
+button.btn-primary:hover {
+  background-color: #EDDA6F; 
+  border: none; 
+  color: #000000
+}

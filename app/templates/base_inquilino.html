@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <title>Alquiler Express</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
+  
+</head>
+<body>
+
+  <div class="sidebar" id="sidebar" >
+    <button id="btnToggleSidebar" class="sidebar-toggle collapsed">
+      <span class="icon">&lt;&lt;</span>
+      <span class="label"></span>
+    </button>
+  <div class="sidebar-content">
+    <h5 class="filter-title mt-4">Filtrar Resultados</h5>
+
+    <label class="filter-title mt-3">Precio por dia ($)</label>
+    <input type="range" class="form-range" min="10000" max="300000" step="10000" id="precioRange" />
+    <div id="precioLabel">Hasta $3000000</div>
+
+    <label class="filter-title mt-3">Tipo de propiedad</label>
+    <select class="form-select" id="tipoVivienda">
+    <option value="">Todos</option>
+    <option value="hotel">Hotel</option>
+    <option value="ph">PH</option>
+    <option value="departamento">Departamento</option>
+    <option value="casa">Casa</option>
+    <option value="quinta">Quinta</option>
+    <option value="hostel">Hostel</option>
+    </select>
+    
+    <label class="filter-title mt-3">Cantidad de habitaciones</label>
+    <select class="form-select" id="cantidadHabitaciones">
+      <option value="">Seleccionar</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+    </select>
+
+    <!-- <label class="filter-title mt-3">Metros cuadrados (mínimo)</label>
+    <input type="number" class="form-control" id="metrosCuadrados" placeholder="Ej: 20" /> -->
+
+    <button class="btn btn-success btn-filtros mt-4" id="aplicarFiltros">Aplicar Filtros</button>
+    <button class="btn btn-secondary btn-filtros mt-2" id="quitarFiltros">Quitar Filtros</button>
+  </div>
+</div>
+  <div class="logo-custom py-4">
+    <div class="ver-perfil-container">
+      <div>
+        <div class="bienvenida-usuario d-flex justify-content-between align-items-center">
+          <span><b id="tipo-usuario"></b></span>
+          <div class="grupo-derecha d-flex align-items-center">
+            <span class="border-end pe-2"><b id="nombre-apellido-usuario"></b></span>
+            <button type="button" class="btn btn-primary ms-2" id="btn-ver-perfil">
+              <i class="fa-solid fa-user"></i>
+              Ver perfil
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom  w-100">
+      <div class="d-flex align-items-center me-auto gap-3">
+        <a href="" class="btn btn-cerrar-sesion" id="btn-cerrar-sesion">Cerrar Sesion</a>
+        <a href="/reserva/reservas_usuario" class="btn btn-mis-alquileres" id="btn-mis-alquileres">Ver Alquileres</a>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a class="nav-link text-dark nav-link-hover" href="#" id="btn-medios">Medios de Pago</a>
+        <a class="nav-link text-dark nav-link-hover" href="#" id="btn-contacto">Contacto</a>
+        <!-- <a href="" class="btn btn-ver-perfil">Ver perfil</a> -->
+      </div>
+    </nav>
+
+    <div class="row g-2 align-items-center">
+      <div class="col-md-2 text-center">
+        <a href="{{ url_for('inicio') }}">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="100" height="100" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-10">
+        <form class="row g-2 form" id="searchForm">
+          <div class="col-md-4">
+            <input type="text" class="form-control input-custom" id="localidad"  placeholder="¿A dónde vas?"  required/>
+            <span class="error-msg" id="error-localidad"></span>
+          </div>
+          <div class="col-md-3">
+            <input type="number" min="1" max="10" class="form-control input-custom" id="huespedes" placeholder="¿Cuántos huéspedes?"  required/>
+            <span class="error-msg" id="error-huespedes"></span>
+          </div>
+           <!-- NUEVOS CAMPOS DE FECHA -->
+          <div class="col-md-2">
+            <input id="checkin" placeholder="Check-in" readonly class="form-control input-custom" required/>
+            <span class="error-msg" id="error-checkin"></span>
+          </div>
+          <div class="col-md-2">
+            <input id="checkout" placeholder="Check-out" readonly class="form-control input-custom" id="checkout" required/>
+            <span class="error-msg" id="error-checkout"></span>
+          </div>
+          <div class="btn-container col-md-2">
+            <button type="submit" class="btn btn-buscar btn btn-warning w-100" id="btnBuscar"> <i class="fas fa-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Medios de Pago -->
+  <div class="modal fade" id="mediosPagoModal" tabindex="-1" aria-labelledby="mediosPagoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mediosPagoModalLabel">Medios de Pago</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          💳 Tarjeta de Débito<br />
+          💳 Tarjeta de Crédito<br />
+          💰 Mercado Pago<br />
+          💵 Efectivo (presencial)
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Contacto -->
+  <div class="modal fade" id="contactoModal" tabindex="-1" aria-labelledby="contactoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contactoModalLabel">Contacto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          📞 Teléfono: 123456<br />
+          📧 Mail: alquilerexpress@gmail.com
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cerrar Sesion -->
+  <div class="modal fade" id="cerrarSesionModal" tabindex="-1" aria-labelledby="cerrarSesionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cerrarSesionModalLabel">Cerrar Sesión</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          ¿Desea cerrar la sesión actual?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-confirmacion-cerrar-sesion" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de propiedades -->
+  <div class="container my-5">
+    <h3 class="mb-3" id="titulo"></h3>
+    <div class="row" id="propiedades">
+    <section class="d-flex justify-content-center align-items-center" style="min-height: 500px; margin-top: 2px;">
+      <div class="card text-white border border-dark shadow" style="width: 900px; max-width: 100%;">
+        <img src="/static/img/BA.jpg" class="card-img" alt="Vista de ciudad" style="height: 400px; object-fit: cover;">
+        <div class="card-img-overlay d-flex flex-column justify-content-center text-center bg-dark bg-opacity-50">
+          <h2 class="card-title fw-bold display-5">Tu próximo hogar te espera</h2>
+          <p class="card-text fs-4">Explorá alquileres en las mejores zonas de la ciudad</p>
+        </div>
+      </div>
+    </section>
+    </div>
+  </div>
+
+  <!-- Modal de propiedades -->
+<!-- <div class="modal fade" id="propiedadModal" tabindex="-1" aria-labelledby="propiedadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="propiedadModalLabel">Detalles de la Propiedad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+     
+      </div>
+    </div>
+  </div>
+</div> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+
+</body>
+</html>

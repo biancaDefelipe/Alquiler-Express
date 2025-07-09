@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Inquilinos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/listado_empleados.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="titulo-principal">Listado de Inquilinos</h1>
+            <a href="{{ url_for('inicio') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="height: 100px;">
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form class="d-flex w-100 me-3" method="get" action="{{ url_for('Usuario.tabla_inquilinos') }}"> 
+                <input type="text" name="dni" class="form-control me-2" placeholder="Buscar por DNI">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </form>
+        </div>
+        
+
+        {% if inquilinos %}
+        <div class="table-responsive">
+            <div class="table-responsive" id="contenedor-tabla">
+                {% include 'tabla_inquilinos.html' %}
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            No hay inquilinos para mostrar.
+        </div>
+        {% endif %}
+    </div>
+
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // Evita que se envíe normalmente
+
+                const currentParams = new URLSearchParams(window.location.search); // Parámetros actuales de la URL
+            
+                const dniInput = form.querySelector('input[name="dni"]');
+                
+                // Si hay un valor nuevo para "dni", lo agregamos o reemplazamos
+                if (dniInput && dniInput.value) {
+                    currentParams.set("dni", dniInput.value);
+                } else {
+                    currentParams.delete("dni"); // Lo quitamos si está vacío
+                }
+
+                // Redirigimos manteniendo todos los parámetros actuales + el nuevo dni
+                const nuevaUrl = form.action + "?" + currentParams.toString();
+                window.location.href = nuevaUrl;
+            });
+        });
+        </script>
+
+
+</body>
+</html>

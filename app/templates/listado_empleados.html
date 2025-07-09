@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Empleados</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/listado_empleados.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="titulo-principal">Listado de Empleados</h1>
+            <a href="{{ url_for('inicio') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="height: 100px;">
+            </a>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <form id="searchForm" class="d-flex align-items-center">
+                    <input type="text" class="form-control me-2" id="busqueda" placeholder="Buscar un miembro del personal..."/>
+                    <p></p>
+                    <button type="submit" class="btn btn-primary me-2" id="btn-buscar">Buscar</button>
+                </form>
+            </div>
+        </div>
+
+
+        {% if empleados %}
+            <div class="table-responsive" id="contenedor-tabla">
+                {% include 'tabla_empleados.html' %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                No hay empleados para mostrar.
+            </div>
+        {% endif %}
+
+        <div id="no-results" class="alert alert-warning d-none">
+            No se encontraron resultados para la búsqueda realizada.
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Cambiar Rol -->
+    <div class="modal fade" id="confirmarCambioRolModal" tabindex="-1" aria-labelledby="confirmarCambioRolModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarCambioRolModalLabel">Confirmar Cambio de Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que quiere cambiar el rol de <strong id="modalNombreEmpleado"></strong> a <strong id="modalRolEmpleado"></strong>?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="modalEmpleadoMail">
+                <button type="button" class="btn btn-primary" id="btnConfirmarCambiarRol" onclick="confirmarCambioRol()">Cambiar Rol</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarCambiarRol" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Empleado -->
+    <div class="modal fade" id="confirmarEliminarEmpleadoModal" tabindex="-1" aria-labelledby="confirmarEliminarEmpleadoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarEliminarEmpleadoModalLabel">Confirmar Eliminación de Empleado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está realmente seguro que quiere eliminar al empleado <strong id="eliminarEmpleadoNombreEmpleado"></strong> con email <strong id="eliminarEmpleadoMailEmpleado"></strong> del sistema?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="modalEliminarEmpleadoMail">
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminarEmpleado" onclick="confirmarEliminarEmpleado()">Eliminar Empleado</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarEliminarEmpleado" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Modificar Email Empleado -->
+    <div class="modal fade" id="cambiarEmailEmpleadoModal" tabindex="-1" aria-labelledby="cambiarEmailEmpleadoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="cambiarEmailEmpleadoModalLabel">
+                Modificar Email de Empleado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <!-- Body con Formulario -->
+            <div class="modal-body">
+                <p>
+                Ingrese el nuevo email para el empleado 
+                <strong id="modalModificarMailNombreEmpleado"></strong>:
+                </p>
+                <form id="formNuevoEmail">
+                <!-- Email Actual -->
+                <div class="mb-3">
+                    <label for="modalMailEmpleado" class="form-label">Email Actual:</label>
+                    <div id="modalModificarMailEmailActualEmpleado" class="form-control-plaintext">
+                    <!-- Aquí se inyecta el email actual -->
+                    </div>
+                </div>
+                <!-- Nuevo Email -->
+                <div class="mb-3">
+                    <label for="inputNuevoMailEmpleado" class="form-label">Nuevo Email:</label>
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="inputNuevoMailEmpleado"
+                    maxlength="50"
+                    required
+                    placeholder="Ingrese el nuevo email..."
+                    >
+                    <span class="error-msg" id="error-email"></span>
+                </div>
+                </form>
+            </div>
+
+            <!-- Footer con Botones -->
+            <div class="modal-footer">
+                <input type="hidden" id="modalEmpleadoMail">
+                <button type="button" class="btn btn-primary" id="btnModificarEmailModal" onclick="abrirModalConfirmarModificarEmail()">
+                Continuar
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarModificarEmailModal" data-bs-dismiss="modal">
+                Cancelar
+                </button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Modificar Mail Empleado -->
+    <div class="modal fade" id="confirmarModificarMailEmpleadoModal" tabindex="-1" aria-labelledby="confirmarModificarMailEmpleadoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarModificarMailEmpleadoModalLabel">Confirmar Modificación de Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que desea modificar el email del empleado <strong id="nombreEmpleadoConfirmacion"></strong> 
+                por <strong id="nuevoEmailConfirmacion"></strong>?<br>
+                Se enviará un correo a la dirección ingresada con una nueva contraseña autogenerada.
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="modalconfirmarModificarMailEmpleado">
+                <button type="button" class="btn btn-primary" id="btnConfirmarModificarEmailModal" onclick="confirmarModificarEmailEmpleado()">Confirmar</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarConfirmarModificarEmailModal" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- MANEJO DEL MODAL PARA CAMBIO DE ROL -->
+    <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        agregarFiltroBusqueda();              // tu setup habitual
+        
+        inicializarPantalla()
+    });
+
+
+    btnModificarEmailModal = document.getElementById("btnModificarEmailModal");
+    btnConfirmarModificarEmailModal = document.getElementById("btnConfirmarModificarEmailModal");
+    btnConfirmarCambiarRol = document.getElementById("btnConfirmarCambiarRol");
+
+    btnCancelarModificarEmailModal = document.getElementById("btnCancelarModificarEmailModal");
+    btnCancelarConfirmarModificarEmailModal = document.getElementById("btnCancelarConfirmarModificarEmailModal");
+    btnCancelarCambiarRol = document.getElementById("btnCancelarCambiarRol");
+
+    btnConfirmarEliminarEmpleado = document.getElementById("btnConfirmarEliminarEmpleado");
+    btnCancelarEliminarEmpleado = document.getElementById("btnCancelarEliminarEmpleado");
+
+    function mostrarError(idCampo, mensaje) {
+        const campo = document.getElementById(idCampo);
+        const errorId = idCampo + "-error";
+    
+        // evito duplicar mensajes de error
+        if (!document.getElementById(errorId)) {
+            const error = document.createElement("p");
+            error.id = errorId;
+            error.className = "error-msg";
+            error.innerText = mensaje;
+            error.style.display= "block"; 
+            campo.classList.add("input-error");
+            campo.parentNode.appendChild(error);
+        }
+    }
+
+    function limpiarErrores() {
+        const errores = document.querySelectorAll(".error-msg");
+        errores.forEach(e => e.remove());
+
+        const camposConError = document.querySelectorAll(".input-error");
+        camposConError.forEach(campo => campo.classList.remove("input-error"));
+    }
+
+    function limpiarBusqueda(){
+        const input = document.getElementById('busqueda');
+        const tablaContainer = document.getElementById('contenedor-tabla');
+        
+        input.value = '';
+        document.querySelectorAll('#contenedor-tabla tbody tr')
+                .forEach(fila => fila.style.display = '');
+        document.getElementById('no-results').classList.add('d-none');
+        input.focus();
+        
+        tablaContainer.classList.remove('d-none');
+    }
+
+    function checkNoResults() {
+        const anyVisible = Array.from(document.querySelectorAll('#contenedor-tabla tbody tr'))
+            .some(tr => tr.style.display !== 'none');
+        const tablaContainer = document.getElementById('contenedor-tabla');
+        const noResultsDiv = document.getElementById('no-results');
+
+        if (!anyVisible) {
+            noResultsDiv.classList.remove('d-none');
+            tablaContainer.classList.add('d-none');
+            
+        } else {
+            noResultsDiv.classList.add('d-none');
+            tablaContainer.classList.remove('d-none');
+        }
+    }
+
+    function agregarFiltroBusqueda() { 
+        const form = document.getElementById('searchForm');
+        const input = document.getElementById('busqueda');
+
+        // Quitamos cualquier listener previo para evitar duplicados
+        form.removeEventListener('submit', form._filtroHandler);
+        
+        // Definimos handler y lo guardamos en la propiedad para luego poder quitarlo
+        form._filtroHandler = function(event) {
+            event.preventDefault();
+            const term = input.value.trim().toLowerCase();
+
+            if (term === '') {
+                // Si el término está vacío, restauro todo
+                limpiarBusqueda();
+                return;
+            }
+
+            document.querySelectorAll('#contenedor-tabla tbody tr')
+                .forEach(fila => {
+                    const celdas = Array.from(fila.querySelectorAll('td')).slice(0,6);
+                    const coincide = celdas.some(td => td.textContent.toLowerCase().includes(term));
+                    fila.style.display = coincide ? '' : 'none';
+                });
+            
+            checkNoResults();
+        };
+        
+        form.addEventListener('submit', form._filtroHandler);
+    }
+
+    function setupSearch() {
+        agregarFiltroBusqueda();
+        const btnClear = document.getElementById('btn-limpiar-busqueda');
+        btnClear.addEventListener('click', limpiarBusqueda);
+  }
+
+    function inicializarPantalla() {
+        limpiarErrores();
+
+        const botonesCambiarRol = document.querySelectorAll('.cambiar-rol-btn');
+        botonesCambiarRol.forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                const rolActual = boton.getAttribute('data-rol');
+                const nuevoRol = rolActual === 'EMPLEADO' ? 'GERENTE' : 'EMPLEADO';
+                const nombre = boton.getAttribute('data-nombre');
+                const mail = boton.getAttribute('data-mail');
+
+                document.getElementById('modalNombreEmpleado').textContent = nombre;
+                document.getElementById('modalEmpleadoMail').value = mail;                
+                document.getElementById('modalRolEmpleado').textContent = nuevoRol;
+            });
+        });
+
+        
+        const botonesModificarMail = document.querySelectorAll('.modificar-email-btn');
+        botonesModificarMail.forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                const nombre = boton.getAttribute('data-nombre');
+                const mail = boton.getAttribute('data-mail');
+                const nuevo_mail = document.getElementById('inputNuevoMailEmpleado').value;
+
+                document.getElementById('modalModificarMailNombreEmpleado').textContent = nombre;
+                document.getElementById('modalModificarMailEmailActualEmpleado').textContent = mail;
+                
+                document.getElementById('nombreEmpleadoConfirmacion').textContent = nombre;
+                document.getElementById('nuevoEmailConfirmacion').textContent = nuevo_mail;
+            });
+        });
+
+        const botonesEliminarEmpleado = document.querySelectorAll('.eliminar-empleado-btn');
+        botonesEliminarEmpleado.forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                const nombre = boton.getAttribute('data-nombre');
+                const mail = boton.getAttribute('data-mail');
+
+                document.getElementById('modalEliminarEmpleadoMail').value = mail; 
+                document.getElementById('eliminarEmpleadoNombreEmpleado').textContent = nombre;
+                document.getElementById('eliminarEmpleadoMailEmpleado').textContent = mail;
+            });
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('hidden.bs.modal', function () {
+                habilitarBotones();
+            });
+        });
+
+    }
+
+    function deshabilitarBotones(){
+        btnModificarEmailModal.disabled = true;
+        btnConfirmarModificarEmailModal.disabled = true;
+        btnConfirmarCambiarRol.disabled = true;
+
+        btnCancelarModificarEmailModal.disabled = true;
+        btnCancelarConfirmarModificarEmailModal.disabled = true;
+        btnCancelarCambiarRol.disabled = true;
+
+        btnConfirmarEliminarEmpleado.disabled = true;
+        btnCancelarEliminarEmpleado.disabled = true;
+    }
+
+    function habilitarBotones(){
+        btnModificarEmailModal.disabled = false;
+        btnConfirmarModificarEmailModal.disabled = false;
+        btnConfirmarCambiarRol.disabled = false;
+
+        btnCancelarModificarEmailModal.disabled = false;
+        btnCancelarConfirmarModificarEmailModal.disabled = false;
+        btnCancelarCambiarRol.disabled = false;
+
+        btnConfirmarEliminarEmpleado.disabled = false;
+        btnCancelarEliminarEmpleado.disabled = false;
+    }
+
+    function habilitarBotonesModificarEmailModal(){
+        console.log("AAAAAA");
+        btnModificarEmailModal.disabled = false;
+        btnCancelarModificarEmailModal.disabled = false;
+    }
+
+
+    
+    async function ver_sesion_actual() {
+        try {
+            const url = `http://localhost:4000/usuario/ver_sesion_actual`;
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                "Content-Type": "application/json"
+                }
+            });
+
+            datos_sesion_actual = await response.json();
+
+            if (response.status === 200) {
+                console.log("Se obtuvo todo bien!")
+                return datos_sesion_actual;
+            }
+            else {
+                alert("Ocurrió un error al obtener la información de la sesión actual.");
+            }
+        }
+        catch (error) {
+            alert("Ocurrió un error inesperado en la aplicación.");
+        }
+    }
+
+    
+
+    async function obtener_un_solo_usuario_por_ID(id_usuario) {
+        try {
+            const url = `http://localhost:4000/usuario/getUsuarioPorID?id=${id_usuario}`;
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            
+            datos_usuario = await response.json();
+
+            if (response.status === 200) {
+                console.log("Se obtuvo todo bien!")
+                return datos_usuario;
+            }
+            else {
+                alert("Ocurrió un error al obtener los datos del usuario.");
+            }
+        }
+        catch (error) {
+            alert("Ocurrió un error inesperado en la aplicación.");
+        }
+    }
+
+    function abrirModalConfirmarModificarEmail() {
+        btnModificarEmailModal.disabled = true;
+        btnCancelarModificarEmailModal.disabled = true;
+        
+        const nombre = document.getElementById('modalModificarMailNombreEmpleado').textContent;
+        const mail_actual = document.getElementById('modalModificarMailEmailActualEmpleado').textContent;
+        const nuevo_mail = document.getElementById('inputNuevoMailEmpleado').value;
+
+        if (!validarDatosModificarMailEmpleado(mail_actual, nuevo_mail)) {
+            // Setear los textos en el segundo modal
+            document.getElementById('nombreEmpleadoConfirmacion').textContent = nombre;
+            document.getElementById('nuevoEmailConfirmacion').textContent = nuevo_mail;
+
+            // Cerrar el primer modal
+            const modalModificar = bootstrap.Modal.getInstance(document.getElementById('cambiarEmailEmpleadoModal'));
+            modalModificar.hide();
+
+            // Abrir el segundo
+            const modalConfirmar = new bootstrap.Modal(document.getElementById('confirmarModificarMailEmpleadoModal'));
+            modalConfirmar.show();
+        }
+        else{
+            habilitarBotones();
+        }
+    }
+
+    function validarDatosModificarMailEmpleado(mail_actual, nuevo_mail) {
+        let tieneError = false;
+
+        limpiarErrores();
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nuevo_mail)) {
+            mostrarError("inputNuevoMailEmpleado", "Ingrese un email válido.");
+            tieneError = true;
+        }
+        
+        if (mail_actual === nuevo_mail) {
+            mostrarError("inputNuevoMailEmpleado", "El nuevo email debe ser distinto al email actual.");
+            tieneError = true;
+        }
+
+        console.log("TIENE ERROR!" + tieneError)
+        return tieneError;
+    }
+
+    async function confirmarModificarEmailEmpleado() {
+        deshabilitarBotones();
+
+        const mail_actual = document.getElementById('modalModificarMailEmailActualEmpleado').innerText;
+        const nuevo_mail = document.getElementById('inputNuevoMailEmpleado').value.trim();
+
+        
+            try {
+                const url = `http://localhost:4000/usuario/modificar_mail_empleado?mail_actual=${mail_actual}&nuevo_mail=${nuevo_mail}`;
+
+                const response = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const resultado = await response.json();
+                console.log(resultado);
+
+                if (response.status === 200) {
+                    console.log("Modificación de email exitosa.");
+
+                    // Recargar solo la tabla
+                    const tablaResponse = await fetch('http://127.0.0.1:4000/usuario/tabla_empleados');
+                    const htmlTabla = await tablaResponse.text();
+
+                    document.getElementById('contenedor-tabla').innerHTML = htmlTabla;
+
+                    // Volver a registrar eventos a los nuevos botones
+                    habilitarBotones();
+                    inicializarPantalla();
+
+                    // Cerrar el modal
+                    const modalConfirmacionModificarEmail = bootstrap.Modal.getInstance(document.getElementById('confirmarModificarMailEmpleadoModal'));
+                    const modalModificarEmail = bootstrap.Modal.getInstance(document.getElementById('cambiarEmailEmpleadoModal'));
+                    alert("La modificación de email se realizó con éxito.")
+                    document.getElementById("inputNuevoMailEmpleado").value = "";
+                    modalModificarEmail.hide();
+                    modalConfirmacionModificarEmail.hide();
+                }
+                else if (resultado["Code"] == "MAIL-INVALIDO"){
+                    alert("No se encontró ningún usuario con ese mail actual.");
+                    habilitarBotones();
+                }
+                else if (resultado["Code"] == "MAIL-EXISTENTE"){
+                    alert("El email ingresado ya se encuentra registrado para otro usuario.");
+                    habilitarBotones();
+                }
+                else if (resultado ["Code"] == "DATABASE-ERROR") {
+                    alert("Ocurrió un error inesperado en el sistema.");//     + (resultado.DatabaseError || resultado.Error));
+                    habilitarBotones();
+                }
+                else if (resultado ["Code"] == "GENERIC-ERROR"){
+                    alert("Ocurrió un error inesperado.");
+                    habilitarBotones();
+                }
+            } catch (error) {
+                alert("Ocurrió un error inesperado en la aplicación.");
+                habilitarBotones();
+            }
+        
+    }
+
+    <!-- LLAMADO AL BE PARA CAMBIO DE ROL -->
+    
+    async function confirmarCambioRol() {
+        deshabilitarBotones();
+        
+        const mail = document.getElementById('modalEmpleadoMail').value;
+
+        try {
+            const url = `http://localhost:4000/usuario/cambiar_rol?mail=${mail}`;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const resultado = await response.json();
+            console.log(resultado);
+
+            if (response.status === 200) {
+                console.log("Cambio de rol exitoso");
+
+                // Recargar solo la tabla
+                const tablaResponse = await fetch('http://127.0.0.1:4000/usuario/tabla_empleados');
+                const htmlTabla = await tablaResponse.text();
+
+                document.getElementById('contenedor-tabla').innerHTML = htmlTabla;
+
+                // Volver a registrar eventos a los nuevos botones
+                inicializarPantalla();
+
+                // Cerrar el modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarCambioRolModal'));
+                modal.hide();
+            } else {
+                alert("Ocurrió un error al intentar cambiar el rol del usuario.");
+                habilitarBotones();
+            }
+        } catch (error) {
+            alert("Ocurrió un error inesperado en la aplicación.");
+            habilitarBotones();
+        }
+    }
+
+    async function confirmarEliminarEmpleado() {
+        deshabilitarBotones();
+        
+        const mail = document.getElementById('modalEliminarEmpleadoMail').value;
+
+        try {
+            const url = `http://localhost:4000/usuario/eliminar?mail=${mail}`;
+
+            const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const resultado = await response.json();
+            console.log(resultado);
+
+            if (response.status === 200) {
+                console.log("Eliminación exitosa.");
+
+                // Recargar solo la tabla
+                const tablaResponse = await fetch('http://127.0.0.1:4000/usuario/tabla_empleados');
+                const htmlTabla = await tablaResponse.text();
+
+                document.getElementById('contenedor-tabla').innerHTML = htmlTabla;
+
+                // Volver a registrar eventos a los nuevos botones
+                inicializarPantalla();
+
+                // Cerrar el modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarEliminarEmpleadoModal'));
+                alert("El empleado se eliminó con éxito.")
+                modal.hide();
+                habilitarBotones();
+            } else {
+                alert("Ocurrió un error al intentar eliminar al empleado.");
+                habilitarBotones();
+            }
+        } catch (error) {
+            alert("Ocurrió un error inesperado en la aplicación.");
+            habilitarBotones();
+        }
+    }
+
+    </script>
+</body>
+</html>

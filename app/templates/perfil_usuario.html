@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil de Usuario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil_usuario.css') }}">
+</head>
+<body>
+
+  <div class="logo-custom py-4">
+    <!-- Navbar --> 
+    <div class="row g-2 align-items-center">
+      <div class="col-md-2 text-center">
+        <a href="{{ url_for('inicio') }}">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="100" height="100" class="img-fluid">
+        </a>
+      </div>
+    </div>
+    
+  </div>
+  
+
+  <div class="container">
+    <p></p>
+    <h3 class="mb-4">Perfil de Usuario</h3>
+    
+    <form id="formRegistro" >
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Email</label>
+          <p class="form-control-plaintext" id="email">-</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">DNI</label>
+          <p class="form-control-plaintext" id="dni">-</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Fecha de Nacimiento</label>
+          <p class="form-control-plaintext" id="fecha-nacimiento">-</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="nombre" class="form-label">Nombre<span class="asterisco-obligatorio">*</span></label>
+          <input type="text" class="form-control" id="nombre" maxlength="50" required placeholder="Ingrese un nombre...">
+          <span class="error-msg" id="error-nombre"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="apellido" class="form-label">Apellido<span class="asterisco-obligatorio">*</span></label>
+          <input type="text" class="form-control" id="apellido" maxlength="50" required placeholder="Ingrese un apellido...">
+          <span class="error-msg" id="error-apellido"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="telefono (Indicando el código de area)" class="form-label">Teléfono<span class="asterisco-obligatorio">*</span></label>
+          <input type="tel" class="form-control" id="telefono" maxlength="24" required placeholder="Ingrese un teléfono...">
+          <span class="error-msg" id="error-telefono"></span>
+        </div>
+      </div>
+
+      <div class="buttons mt-">
+        <button type="button" class="btn btn-secondary" id="btnCambiarContrasenia" data-bs-toggle="modal" data-bs-target="#modalCambiarContrasenia">Cambiar constraseña</button>
+        <div class="d-flex justify-content-end align-items-center gap-2 w-100">
+          <span class="asterisco-obligatorio">* Campos obligatorios</span>
+          <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar cambios</button>
+        </div>
+      </div>
+      
+    </form>
+  </div>
+
+  <!-- Modal Cambiar Contraseña -->
+  <div class="modal fade" id="modalCambiarContrasenia" tabindex="-1" aria-labelledby="modalCambiarContraseniaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambiarContraseniaLabel"><b>Cambiar contraseña</b></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formCambioContrasenia">
+            <div class="mb-3">
+              <label for="contraseniaActual" class="form-label">Contraseña actual</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="contrasenia-actual" required>
+                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="contrasenia-actual">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="error-msg" id="error-contrasenia-actual"></div>
+            </div>
+            <div class="mb-3">
+              <label for="nuevaContrasenia" class="form-label">Nueva contraseña</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="nueva-contrasenia" required>
+                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="nueva-contrasenia">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="error-msg" id="error-nueva-contrasenia"></div>
+            </div>
+            <div class="mb-3">
+              <label for="repetirContrasenia" class="form-label">Repetir nueva contraseña</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="repetir-contrasenia" required>
+                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="repetir-contrasenia">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="error-msg" id="error-repetir-contrasenia"></div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <button type="submit" form="formCambioContrasenia" id="btnGuardarContrasenia" class="btn btn-primary">Cambiar contraseña</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p></p>
+
+  <script>const urlIndex = "{{ url_for('inicio') }}";</script> 
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/perfil_usuario.js') }}"></script>
+
+  
+  <!-- PARA PODER VER Y OCULTAR EL CONTENIDO DE LOS INPUTS DEL MODAL CAMBIAR CONTRASEÑA -->
+  <script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', () => {
+        const inputId = button.getAttribute('data-target');
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector('i');
+
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html> 

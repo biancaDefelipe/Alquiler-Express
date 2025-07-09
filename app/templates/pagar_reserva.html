@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pago de Reserva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagar_reserva.css') }}"/>
+  </head>
+  <body>
+  
+
+    <div class="contentWallet">
+      <div id="wallet_container"></div>
+    </div>
+
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script>
+
+      // Obtener los parámetros de la URL
+      const params = new URLSearchParams(window.location.search);
+
+      // Extraer los valores
+      const descripcion = params.get('titulo');
+      const precio = parseFloat(params.get('precio_total')); // Asegurate de que sea número
+
+      const mp = new MercadoPago("APP_USR-797f85ac-3130-43f7-adf4-6dbee937d17a", {locale: "es-AR"}); // Pulic key mp
+      fetch("/pagar_reserva/mercado_pago/pagar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          descripcion: descripcion,
+          precio: precio,
+          cantidad: 1,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = data.url;
+        })
+        .catch((error) => {
+          console.error("Error al crear la preferencia de pago:", error);
+        });
+    </script>
+  </body>
+</html>

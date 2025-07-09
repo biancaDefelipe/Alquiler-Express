@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mis Alquileres</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .estado-cancelada { color: red !important; font-weight: bold; }
+    .estado-finalizada { color: gray !important; font-weight: bold; }
+    .estado-abonada { color: blue !important; font-weight: bold; }
+    .estado-en-curso { color: green !important; font-weight: bold; }
+    .btn-sm { background-color: #468423; border: none; }
+    .btn-sm:hover { background-color: #EDDA6F; border: none; color: black; }
+    #confirmarBtn { background-color: #468423; border: none; }
+
+    /* Ajustar ancho y centrado para columna Ver Propiedad */
+    th.ver-propiedad, td.ver-propiedad {
+      width: 130px;
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="titulo-principal">Mis Alquileres</h1>
+      <a href="{{ url_for('inicio') }}">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="height: 100px;" />
+      </a>
+    </div>
+
+    {% if reservas %}
+      <script>
+        window.reservas = JSON.parse('{{ reservas | tojson | safe }}');
+        console.log("Reservas con ya_comento:", window.reservas.map(r => [r.id_reserva, r.ya_comento]));
+      </script>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle" id="tabla">
+          <thead class="table">
+
+            <tr>
+              <th>Código</th>
+              <th>ID Propiedad</th>
+              <th>Precio Total</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Estado</th>
+              <th>Calificación</th>
+              <th>Acciones</th>
+            </tr>
+
+          </thead>
+          <tbody>
+            {% for reserva in reservas %}
+              <tr data-id-reserva="{{ reserva.id_reserva }}">
+                <td>{{ reserva.id_reserva }}</td>
+                <td>{{ reserva.id_propiedad }}</td>
+                <td>${{ reserva.precio_total }}</td>
+                <td>{{ reserva.fecha_inicio }}</td>
+                <td>{{ reserva.fecha_fin }}</td>
+                <td class="estado-{{ reserva.estado|lower|replace(' ', '-') }}" id="estado-{{ reserva.id_reserva }}">
+                  {{ reserva.estado }}
+                </td>
+                
+                <td class="text-center">
+                  {% if reserva.calificacion != None and reserva.calificacion != 0 %}
+                    {{ reserva.calificacion }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+
+                    <div class="dropdown" data-bs-boundary="viewport" data-bs-display="static" style="position: static; "id="div-dropdown-{{ reserva.id_reserva }}">
+                      <button class="btn btn-sm p-0 fs-3" style="background: transparent; border: none; color: inherit;" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Más acciones">
+                        ⋮
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownOpciones{{ reserva.id_reserva }}">
+
+                      <li class="ver-propiedad">
+                        <button class="dropdown-item btn-verPropiedad" data-id-propiedad="{{ reserva.id_propiedad }}">
+                          Ver propiedad
+                        </button>
+                      </li>
+
+                      <li>
+                        <button class="dropdown-item text-danger" onclick="confirmarCancelacion('{{ reserva.id_reserva }}')">
+                          Cancelar reserva
+                        </button>
+                      </li>
+
+                      <li>
+                        {% if reserva.estado.upper() == 'FINALIZADA' %}
+                          <button class="dropdown-item btn-comentar btn-info" data-id-reserva="{{ reserva.id_reserva }}">
+                            Comentar
+                          </button>
+                        {% else %}
+                          <span class="dropdown-item disabled text-muted" title="Solo se puede comentar una reserva finalizada.">
+                            Comentar
+                          </span>
+                        {% endif %}
+                      </li>
+
+                      <li>
+                        {% if reserva.estado.upper() == 'FINALIZADA' and (reserva.calificacion == None or reserva.calificacion == 0) %}
+                          <button class="dropdown-item" onclick="calificarReserva('{{ reserva.id_reserva }}')" id="btnCalificar{{ reserva.id_reserva }}">
+                            Calificar
+                          </button>
+                        {% else %}
+                          <button class="dropdown-item disabled" onclick="calificarReserva('{{ reserva.id_reserva }}')" id="btnCalificar{{ reserva.id_reserva }}">
+                            Calificar
+                          </button>
+                        {% endif %}
+                      </li>
+
+                    </ul>
+                  </div>
+                </td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-warning">No hay reservas para mostrar.</div>
+    {% endif %}
+  </div>
+
+  <!-- Modal Confirmación -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Confirmar acción</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="modalMensaje">
+          ¿Estás seguro que querés realizar esta acción?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" id="confirmarBtn">Sí</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Comentario -->
+  <div class="modal fade" id="comentarioModal" tabindex="-1" aria-labelledby="comentarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="formComentario" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="comentarioModalLabel">Agregar Comentario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="inputIdReserva" name="id_reserva" value="" />
+          <div class="mb-3">
+            <label for="inputComentario" class="form-label">Comentario</label>
+            <!--AGREGADO BIAN-->
+            
+            <textarea
+              class="form-control"
+              id="inputComentario"
+              name="texto"
+              rows="3"
+              required
+              maxlength="200"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Comentar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Calificar -->
+  <div class="modal fade" id="calificarModal" tabindex="-1" aria-labelledby="calificarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="calificarModalLabel">Calificar Propiedad</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="formCalificar">
+            <div class="mb-3">
+              <label for="rating" class="form-label">
+                Seleccioná un puntaje (1–10):
+              </label>
+                <select class="form-select" id="rating" required>
+                  <option value="" disabled selected hidden>Seleccione una opción</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="button"
+                  class="btn btn-success"
+                  id="btnEnviarCalificacion"
+                  onclick="enviarCalificacion()">
+            Calificar
+          </button>
+        </div>
+
+        <input type="hidden" id="reservaIdInput" value="">
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='js/ver_alquileres_inquilino.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+--------------------------------------------------------------------------------------------------------
+PROYECTO
+
+- Instalar dependencias en entorno virtual
+pip install -r Alquiler-Express/requirements.txt
+
+
+- Activar entorno virtual
+source ./Scripts/activate
+
+
+- Correr proyecto
+python ./app/app.py
+
+--------------------------------------------------------------------------------------------------------
+GIT
+
+- Crear nueva rama
+1- git fetch origin epic/gestion_cuentas_usuario (trae a local los últimos cambios de la rama)
+2- git checkout -b HU/eliminar_propiedad origin/test (cambia la rama)
+    + "-b HU/eliminar_propiedad": crea una nueva rama local con ese nombre.
+    + "origin/test": usa esa rama remota como punto de partida.
+    + Cambia tu entorno de trabajo a la nueva rama recién creada.
+
+- Usar rama
+git checkout verificar_factor_autenticacion
+
+- Subir rama por primera vez y trabajar en la rama
+git push -u origin HU/eliminar_propiedad
+    + -u: es para que git recuerde la rama que se pusheo para luego hacer directamente "git push"
+
+- Asegurarse que se tiene los ultimos cambios (utilizar antes de hacer un merge para evitar conflictos)
+git fetch origin
+
+- Push git
+1- cd Alquiler-Express
+2- git add requirements.txt
+3- git commit -m "Agregar requirements.txt con dependencias"
+4- git push
+
+- Hacer merge de rama HU a Épica y de Épica a main
+1- git fetch origin (Obtener las últimas ramas remotas)
+2- git checkout -b gestion_cuentas_usuario origin/epic/gestion_cuentas_usuario (Crear una rama local desde la rama remota)
+3- git merge verificar_factor_autenticacion (Hacer merge de las ramas)
+4- si hay conflictos hacer cambios manualmente
+    4.1- git add .
+    4.2- git commit
+
+* De épica a main *
+5- git push origin gestion_cuentas_usuario:epic/gestion_cuentas_usuario (actualizar la rama remota epic/gestion_cuentas_usuario con los cambios fusionados)
+6- git checkout main (cambiar a rama main)
+7- git pull origin main (Trae la última versión remota de main)
+8- git merge gestion_cuentas_usuario (fusionar con gestion_cuentas_usuario)
+9- git push origin main (Subir los cambios a main)
+
+-Resolver conflictos
+1- git status
+2- editar archivos hasta no tener líneas <<<<<<<, ======= o >>>>>>>.
+3- git add path/al/archivo_en_conflicto
+4- git commit
+5- :wq para guardar y salir de vim
+6- git merge --continue
+
+
+--------------------------------------------------------------------------------------------------------
+BBDD
+
+- Models > repository > services > controller > app.py > frontend (fetch de .js)
+
+    - models: objetos a utilizar
+    - controller: request y response
+    - service: logica del servicio
+    - respository: hace la query con comandos de sqlAlchimist
+    - app.py: ejecuta el codigo py, va el @app.route
+
+--------------------------------------------------------------------------------------------------------
+MERCADO PAGO SDK
+
+- poner puerto publico para recibir get de mercado pago
+    - > Foward a port en VisualStudioCode
+    - add puerto 4000
+    - pasar de privado a publico
+    - copiar "Forwarded Addres" en la configuracion del webhook en la integracion del proyecto dentro de mercado pago developers
+
+- credenciales
+    Vendedor
+    user: TESTUSER1579960563
+    pass: mn9TMM2EWw
+
+    Comprador
+    user: TESTUSER1403963651
+    pass: vExIZpR1Zp
+
+- En la app utilizar las keys del VENDEDOR:
+    - Acces token: APP_USR-7661064361183067-051021-c78af2e10040a9045a740b25d6af250e-2435216924
+    - Public key: APP_USR-797f85ac-3130-43f7-adf4-6dbee937d17a
+- configurar webhooks en cuenta VENDEDOR
+- Acceder con la cuenta de COMPRADOR desde mercado pago developers y ahi ejecutar el proyecto

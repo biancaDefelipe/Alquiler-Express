@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modificar Propiedad</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/registrar_propiedad.css') }}">
+
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+
+</head>
+<body>
+
+  <div class="logo-custom py-4">
+    <!-- Navbar --> 
+    <div class="row g-2 align-items-center">
+      <div class="col-md-2 text-center">
+        <a href="{{ url_for('inicio') }}">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="100" height="100" class="img-fluid">
+        </a>
+      </div>
+    </div>
+    
+  </div>
+  
+
+  <div class="container">
+    
+    <div class="row mb-3">
+      <h1 class="titulo-principal">Modificar Propiedad</h1>
+    </div>
+    <form id="formRegistro">   
+      <div class="row mb-3">
+        <h3 class="sub-titulo mb-3 mt-0">Acerca de la Propiedad</h3>
+        <div class="col-md-4">
+          <label for="tipo" class="form-label">Tipo<span class="asterisco-obligatorio">*</span></label>
+          <select class="form-control" id="tipo">
+            <option value="" disabled selected hidden>Seleccione una opción...</option>
+            <option value="Hotel">Hotel</option>
+            <option value="PH">PH</option>
+            <option value="Departamento">Departamento</option>
+            <option value="Casa">Casa</option>
+            <option value="Quinta">Quinta</option>
+            <option value="Hostel">Hostel</option>
+          </select>
+          <span class="error-msg" id="error-tipo"></span>
+        </div>
+        <div class="col-md-4">
+          <label for="localidad" class="form-label">Localidad<span class="asterisco-obligatorio">*</span></label>
+          <input type="text" class="form-control" id="localidad" maxlength="50" placeholder="Ej: La Plata">
+          <span class="error-msg" id="error-localidad"></span>
+        </div>
+        <div class="col-md-4">
+          <label for="metros_cuadrados" class="form-label decimal-limit-5-2">Metros Cuadrados<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" step="0.01" class="form-control decimal-limit-5-2" id="metros_cuadrados" min="1" max="99999.99" placeholder="Ej: 22.6">
+          <span class="error-msg" id="error-metros-cuadrados"></span>
+        </div>
+      </div>
+    
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="calle" class="form-label">Calle<span class="asterisco-obligatorio">*</span></label>
+          <input type="text" class="form-control" id="calle" maxlength="42" placeholder="Ej: Calle 60"/>
+          <span class="error-msg" id="error-calle"></span>
+        </div>
+        <div class="col-md-3">
+          <label for="numero" class="form-label integer-limit-7">Número<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" class="form-control integer-limit-7" id="numero" min="0" max="9999999" placeholder="Ej: 1234">
+          <span class="error-msg" id="error-numero"></span>
+        </div>
+        <div class="col-md-3">
+          <label for="piso" class="form-label">Piso</label>
+          <input type="text" class="form-control" id="piso" maxlength="3" placeholder="Ej: 4"/>
+          <span class="error-msg" id="error-piso"></span>
+        </div>
+        <div class="col-md-3">
+          <label for="departamento" class="form-label">Departamento</label>
+          <input type="text" class="form-control" id="departamento" maxlength="3" placeholder="Ej: E"/>
+          <span class="error-msg" id="error-departamento"></span>
+        </div>
+      </div>
+    
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="cantidad_banios" class="form-label">Cantidad de Baños<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" class="form-control integer-limit-2" id="cantidad_banios" min="1" max="99" placeholder="Ej: 1">
+          <span class="error-msg" id="error-cantidad-banios"></span>
+        </div>
+        <div class="col-md-4">
+          <label for="cantidad_habitaciones" class="form-label">Cantidad de Habitaciones<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" class="form-control integer-limit-2" id="cantidad_habitaciones" min="1" max="99" placeholder="Ej: 1">
+          <span class="error-msg" id="error-cantidad-habitaciones"></span>
+        </div>
+        <div class="col-md-4">
+          <label for="cantidad_huespedes" class="form-label">Cantidad Máxima de Huéspedes<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" class="form-control integer-limit-2" id="cantidad_huespedes" min="1" max="99" placeholder="Ej: 1">
+          <span class="error-msg" id="error-cantidad-huespedes"></span>
+        </div>
+      </div>
+    
+      <div class="row mb-3">
+        <h3 class="sub-titulo mb-3 mt-0">Acerca del Alquiler</h3>
+
+        <div class="col-md-4">
+          <label for="politica_cancelacion" class="form-label">Política de Cancelación<span class="asterisco-obligatorio">*</span></label>
+          <select class="form-control" id="politica_cancelacion" disabled>
+            <option value="" disabled selected hidden>Seleccione una opción...</option>
+            <option value="Cancelacion no reembolsable">Cancelación no reembolsable</option>
+            <option value="Cancelacion 20% reembolso">Cancelación 20% reembolso</option>
+            <option value="Cancelacion total reembolso">Cancelación total reembolso</option>
+          </select>
+          <span class="error-msg" id="error-politica-cancelacion"></span>
+        </div>
+        
+        <div class="col-md-4">
+          <label for="minimo_dias" class="form-label">Mínimo de Días de Alquiler<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" class="form-control integer-limit-2" id="minimo_dias" min="1" max="99" placeholder="Ej: 1">
+          <span class="error-msg" id="error-minimo-dias"></span>
+        </div>
+        <div class="col-md-4">
+          <label for="precio_por_dia" class="form-label">Precio de Alquiler por Día<span class="asterisco-obligatorio">*</span></label>
+          <input type="number" step="0.01" class="form-control decimal-limit-7-2" id="precio_por_dia" min="1" max="9999999.99" placeholder="Ej: 49999.99"/>
+          <span class="error-msg" id="error-precio-por-dia"></span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <h3 class="sub-titulo mb-3 mt-0">Acerca de la Publicación</h3>
+        <div class="col-md-12">
+          <label for="titulo" class="form-label">Título<span class="asterisco-obligatorio">*</span></label>
+          <input type="text" class="form-control" id="titulo" maxlength="100" placeholder="Ej: Casa grande y bonita en el centro">
+          <span class="error-msg" id="error-titulo"></span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <textarea class="form-control alto-descripcion" id="descripcion" maxlength="255" placeholder="Ingrese una descripción..."></textarea>
+          <span class="error-msg" id="error-descripcion"></span>
+        </div>
+      </div>
+
+      <!-- Imagen de la propiedad -->
+      <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-center">
+          <div class="position-relative d-inline-block">
+
+            <!-- imagen precargada -->
+            <img id="previewImagen" src="" style="max-width:auto; height:350px;">
+
+            <!-- botón editar en imagen -->
+            <label
+              id="btnCambiarImagen" class="btn position-absolute" title="Cambiar imagen"
+              style="
+                position:absolute;
+                bottom:.3rem;
+                right:.3rem;
+                width:3rem;
+                height:3rem;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                border-radius:50%;
+                background-color:rgba(255,255,255,0.8);
+                box-shadow:0 0 5px rgba(0,0,0,0.3);
+                cursor:pointer;
+              "
+            >
+              <i class="bi bi-pencil-fill" style="font-size:1.25rem;"></i>
+              <span class="visually-hidden">Cambiar imagen</span>
+            </label>
+
+            <!-- input file -->
+            <input
+              type="file"
+              id="cargar-imagen"
+              name="imagen"
+              accept="image/*"
+              style="display:none;"
+            >
+          </div>
+        </div>
+      </div>
+    
+      <div class="d-flex justify-content-between align-items-center mt-5 mb-5">
+        <span class="asterisco-obligatorio">* Campos obligatorios</span>
+        <button type="submit" class="btn btn-primary" id="btnModificar">Modificar Propiedad</button>
+      </div>
+    </form>
+  </div>
+  <script>const urlIndex = "{{ url_for('inicio') }}";</script>
+
+  <script src="{{ url_for('static', filename='js/modificar_propiedad.js') }}"></script>
+</body>
+</html>

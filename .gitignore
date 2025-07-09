@@ -1,0 +1,9 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+
+alquilerExpress/
+__pycache__/
+*.pyc
+.env
+app/instance/database.db
+app/sesion.json
+app/pago.json

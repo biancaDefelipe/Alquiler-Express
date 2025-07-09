@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <title>Detalle Propiedad</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/detalle_propiedad.css') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
+  
+</head>
+<body>
+
+  <div class="logo-custom py-4">
+  <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 w-100">    
+      <div class="d-flex align-items-center me-auto gap-3">
+        <button type="button" class="btn btn-cerrar-sesion" id="btn-cerrar-sesion">Cerrar Sesión</button>
+      </div>
+      <!-- Enlaces a la izquierda -->
+      <div class="d-flex align-items-center me-auto gap-3">
+        <a href="{{ url_for('registro') }}" class="btn btn-registrarse" id="reg_inq">Registrar Inquilino</a>
+        <!-- <a href="#" class="btn btn-ingresar">Listar inquilinos</a> -->
+      </div>
+
+      <div class="d-flex align-items-center me-auto gap-3">
+        <a href="{{url_for('altaEmpleado')}}" class="btn btn-registrarse">Registrar Empleado</a>
+        <a href="/usuario/getEmpleadosGerentes" class="btn btn-ingresar">Listar Personal</a>
+      </div>
+
+      
+      <div class="d-flex align-items-center me-auto gap-3">
+        <a href="{{url_for('registro_propiedad')}}" class="btn btn-registrarse">Registrar Propiedad</a>
+        <a href="/propiedad/getPropiedades" class="btn btn-ingresar">Listar Propiedades</a>
+        <a href="/reserva/getReservas" class="btn btn-registrarse" id="btn-ver-alquileres">Listar Reservas</a>
+        <div class="d-flex align-items-center me-auto gap-3">
+        <a href="{{url_for('generar_estadisticas')}}" class="btn btn-registrarse">Generar Estadísticas</a>      
+      </div>
+      </div>
+  
+  
+    </nav>
+
+    <div class="row g-2 align-items-center">
+      <div class="col-md-2 text-center">
+        <a href="{{ url_for('inicio') }}">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="100" height="100" class="img-fluid">
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Cerrar Sesion -->
+  <div class="modal fade" id="cerrarSesionModal" tabindex="-1" aria-labelledby="cerrarSesionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cerrarSesionModalLabel">Cerrar Sesión</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          ¿Desea cerrar la sesión actual?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-confirmacion-cerrar-sesion" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Gestion de Alquileres -->
+  <div class="modal fade" id="gestionAlquileresModal" tabindex="-1" aria-labelledby="gestionAlquileresModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gestionAlquileresModalLabel">Gestion de alquileres</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <button class="btn btn-registrarse inside-modal-btn" id="btn-buscar-reserva">Buscar Reserva</button>
+            <button class="btn btn-ingresar inside-modal-btn"  id="btn-listar-reservas">Listar Reserva</button><br>
+            <button class="btn btn-registrarse inside-modal-btn"  id="o">Realizar alquiler para inquilino</button><br>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <!--------------->
+  
+  <main class="contenido container">
+    <!-- Contenido ARRIBA -->
+    <!---------------------->
+    <div class="row mb-4">
+      <section class="col-md-6 izquierda">
+        <h2 id="titulo-propiedad"><b></b></h2>
+        <p class="id" id="id-propiedad"></p>
+        <div class="imagen-propiedad">
+          <!-- <button class="flecha"><i class="fas fa-chevron-left"></i></button> -->
+          <img class="imagen" id="imagen-propiedad" src="" alt="Imagen de la propiedad">
+          <!-- <button class="flecha"><i class="fas fa-chevron-right"></i></button> -->
+        </div>
+      </section>
+
+      <!-- Contenido -->
+      <div class="col-md-6 derecha">
+        <div class="calificacion">
+          <div class="puntuacion" id="puntuacion"></div>
+          <span class="texto-calificacion"><b>Calificación promedio de</b><div class="totalCalificaciones" id="total-calificaciones"></div></span>
+          <!-- <div class="estrellas" id="estrellas">★★★★★</div> -->
+        </div>
+
+        <ul class="list-unstyled">
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-map-marker-alt"></i> <b>Ubicación:</b></span>
+              <span id="ubicacion"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-solid fa-up-right-and-down-left-from-center"></i> <b>Dimensiones:</b></span>
+              <span id="dimensiones"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-users"></i> <b>Cantidad de Huéspedes:</b></span>
+              <span id="cantidad-huespedes"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-bed"></i> <b>Cantidad de Habitaciones:</b></span>
+              <span id="cantidad-habitaciones"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-bath"></i> <b>Cantidad de Baños:</b></span>
+              <span id="cantidad-banios"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-undo"></i> <b>Política de Cancelación:</b></span>
+              <span id="politica-cancelacion"></span>
+            </div>
+          </li>
+          <li class="info-item">
+            <div class="info-line">
+              <span><i class="fas fa-clock"></i> <b>Duración Mínima:</b></span>
+              <span id="duracion-minima"></span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="acciones-secundarias d-flex justify-content-end align-items-center gap-3">
+
+        </div>
+
+        <div class="descripcion">
+          <h3>Descripción</h3>
+          <p id="descripcion-propiedad"></p>
+        </div>
+      </section>
+    </div>
+    
+    <div class="info-item m-0 d-flex align-items-center justify-content-end gap-3">
+      <div class="info-line precio-titulo m-0">
+        <span><i class="fas fa-dollar-sign"></i> <b>Precio por día:</b></span>
+      </div>
+      <span class="precio-valor" id="precio-por-dia"></span>
+      <button class="btn-reservar" id="btn-registrar-inquilino">Registrar inquilino</button>
+           <button class="btn-reservar" id="btn-buscarDNI">Buscar inquilino</button>
+
+    </div>
+
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+
+        <!-- Contenido ABAJO -->
+    <div class="row  align-items-start" id="comentarios-preguntas">
+
+      <!-- Columna Izquierda: Comentarios -->
+      <div class="col-md-6 derecha">
+        <!-- <button class="btn-comentario">Dejar comentario</button> -->
+        <div class="comentarios" style="max-height: 300px; overflow-y: auto;">
+          <h3>Comentarios de otros usuarios</h3>
+          <label class="comentarios-vacio">Aún no hay comentarios.</label>
+          <!--
+          <div class="comentario">
+            <p><strong>Juan Perez</strong> <span>11-03-2025</span></p>
+            <p>Hermoso lugar!!! Es tal como en las fotos. La pileta un lujo. Nos quedamos con ganas de volver!!</p>
+          </div>
+          <div class="comentario">
+            <p><strong>Maria Lopez</strong> <span>11-03-2025</span></p>
+            <p>Está ok. Nada del otro mundo.</p>
+          </div>
+          -->
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Preguntas y Respuestas -->
+      <div class="col-md-6 izquierda">
+        <!-- Sección de Preguntas y Respuestas -->
+        <div class="preguntas-respuestas">
+          <h4 class="mb-3 d-flex justify-content-between align-items-center" id="texto-preguntar">
+            <span>Preguntas de otros usuarios</span>
+                    
+          </h4>
+
+          <div id="contenedor-preguntas" style="max-height: 300px; overflow-y: auto;">
+            <!-- Preguntas y respuestas se insertarán acá dinámicamente -->
+          </div>
+          
+          <!-- Modal responder si o si fuera del div de preguntas y respuestas dinamicas !! -->
+             <div class="modal fade" id="modalResponder" tabindex="-1" aria-labelledby="modalResponderLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalResponderLabel">Responder Pregunta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                  </div>
+                  <div class="modal-body">
+                    <textarea class="form-control" id="inputRespuesta" rows="4" maxlength="155" placeholder="Escriba su respuesta..."></textarea>
+                    <div class="invalid-feedback" id="errorRespuesta" style="display:none;">La respuesta no puede estar vacía.</div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnResponder">Publicar Respuesta</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+  <script src="{{ url_for('static', filename='js/detalle_propiedad.js') }}"></script>
+
+</body>
+</html>
